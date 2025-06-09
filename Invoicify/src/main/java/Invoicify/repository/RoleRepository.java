@@ -1,0 +1,31 @@
+package Invoicify.repository;
+
+import java.util.Collection;
+
+import Invoicify.entity.Role;
+
+
+public interface RoleRepository <T extends Role>{
+	//basic crud op
+
+	T create(T data);
+	
+	Collection<T> list(int page,int pageSize);
+	T get(Long id);
+	T update (T data);
+	Boolean delete(Long id);
+
+	
+	
+	
+	//more complex operation
+	void addRoleToUser(long userId, String roleName);
+	Role getRoleByUserId (long userId);
+	Role getRoleByEmail (String email);
+	void updateUserRole(long userId, String roleName);
+	
+	
+	
+	
+	
+}
