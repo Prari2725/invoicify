@@ -44,6 +44,13 @@ CREATE TABLE Roles (
     CONSTRAINT UQ_Roles_Name UNIQUE (name)
 );
 
+
+-- inserting roles
+INSERT INTO Roles (name, permissions)
+VALUES ('ROLE_USER', 'READ_PRIVILEGES')
+ON DUPLICATE KEY UPDATE name = name;
+
+
 -- UserRoles table (join table)
 CREATE TABLE UserRoles (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

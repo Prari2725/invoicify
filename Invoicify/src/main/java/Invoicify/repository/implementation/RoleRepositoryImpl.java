@@ -7,6 +7,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.Collection;
 import java.util.Map;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -60,12 +61,15 @@ public class RoleRepositoryImpl implements RoleRepository<Role>{
 	    log.info("Attempting to add role '{}' to user ID {}", roleName, userId);
 	    try {
 	        Role role = jdbc.queryForObject(SELECT_ROLE_BY_NAME_QUERY, Map.of("name", roleName), new RoleRowMapper());
-	        log.info("Role fetched successfully: {}", role);
 	        jdbc.update(INSERT_ROLE_ID_USER_QUERY, Map.of("userId", userId, "roleId", requireNonNull(role).getId()));
+	    } catch (EmptyResultDataAccessException ex) {
+	        log.error("No role found with name '{}'", roleName);
+	        throw new ApiException("Role not found: " + roleName);
 	    } catch (Exception e) {
 	        log.error("Error assigning role: {}", e.getMessage(), e);
-	        throw new ApiException("An Error Occurred. Please try again");
+	        throw new ApiException("An error occurred. Please try again.");
 	    }
+
 	}
 
 	
